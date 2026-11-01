@@ -273,3 +273,26 @@ func stringsHasTestHome(path string) bool {
 func includeName(index int) string {
 	return "config-" + string(rune('a'+index))
 }
+
+// OpenSSH reads a backslash before anything but a quote, a backslash or a space
+// as itself, which is how a Windows path in IdentityFile is written.
+func TestBackslashesKeepWindowsPaths(t *testing.T) {
+	for _, test := range []struct{ line, want string }{
+		{`IdentityFile C:\Users\me\.ssh\id_ed25519`, `C:\Users\me\.ssh\id_ed25519`},
+		{`IdentityFile "C:\\Users\\me\\id key"`, `C:\Users\me\id key`},
+		{`IdentityFile C:\Users\me\id\ key`, `C:\Users\me\id key`},
+		{`IdentityFile 'C:\Users\me\id'`, `C:\Users\me\id`},
+	} {
+		path := filepath.Join(t.TempDir(), "config")
+		if err := os.WriteFile(path, []byte("Host box\n    "+test.line+"\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		result, err := ParseFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(result.Hosts) != 1 || result.Hosts[0].IdentityFile != test.want {
+			t.Errorf("%s read as %+v, want %q", test.line, result.Hosts, test.want)
+		}
+	}
+}

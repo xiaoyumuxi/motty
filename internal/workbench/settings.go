@@ -276,6 +276,8 @@ func (state *State) clickSettings(id ui.ID) bool {
 		changed = state.setTabOrientation(tabsVertical)
 	case hitSettingsVerticalTabsAutoHide:
 		changed = state.setVerticalTabsAutoHide(!state.verticalTabs.autoHide)
+	case hitSettingsVerticalTabsGrouping:
+		changed = state.setVerticalTabsGrouping(!state.verticalTabs.grouping)
 	case hitSettingsCloseTray:
 		changed = state.closeAction != closeToTray
 		state.closeAction = closeToTray

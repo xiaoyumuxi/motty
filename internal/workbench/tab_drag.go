@@ -208,7 +208,11 @@ func (state *State) foreignDropAt(screen ui.Point, panes int) tabDrop {
 		return drop
 	}
 	count := len(state.workspaceTabs)
-	x := state.tabStrip.origin - state.tabStrip.offset + float32(count)*state.tabStrip.pitch - barGap/2
+	rows := count
+	if state.verticalTabsGrouped() {
+		rows = len(state.verticalTabs.grouped.rows)
+	}
+	x := state.tabStrip.origin - state.tabStrip.offset + float32(rows)*state.tabStrip.pitch - barGap/2
 	return tabDrop{kind: dropReorder, boundary: count, zone: state.tabInsertion(x)}
 }
 
@@ -230,6 +234,9 @@ func (state *State) tabInsertion(x float32) ui.Rect {
 func (state *State) tabDropAt(at ui.Point, source layoutcore.WorkspaceID, panes int) tabDrop {
 	strip := &state.tabStrip
 	if pointInRect(at.X, at.Y, strip.area) && strip.pitch > 0 {
+		if state.verticalTabsGrouped() {
+			return state.groupedVerticalTabDrop(at, source)
+		}
 		positionOnAxis := at.X
 		if strip.vertical {
 			positionOnAxis = at.Y
@@ -312,6 +319,12 @@ func (state *State) dropTab(drag tabDrag) {
 	}
 	switch drag.drop.kind {
 	case dropReorder:
+		if state.verticalTabsGrouped() && state.reorderVerticalTabGroup(drag.workspace, drag.drop.boundary) {
+			state.rebuildTabOptions()
+			state.activateWorkspace(drag.workspace)
+			state.save()
+			return
+		}
 		position := -1
 		for index, tab := range state.workspaceTabs {
 			if tab.ID == drag.workspace {

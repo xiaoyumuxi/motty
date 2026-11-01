@@ -1322,6 +1322,9 @@ func (state *State) click(id ui.ID, feedback bool) {
 	if state.clickTerminalFind(id) {
 		return
 	}
+	if state.clickVerticalTabGroup(id) {
+		return
+	}
 	if state.clickRemoteStats(id) {
 		return
 	}
@@ -2236,6 +2239,9 @@ func (state *State) key(event ui.KeyEvent) ui.EventResult {
 	if state.modal == modalKeyPassphrase && event.Key == ui.KeyEnter && event.Target == hitKeyPassphraseField && !event.Repeat {
 		state.submitKeyPassphrase()
 		return ui.EventResult{Handled: true, Repaint: true}
+	}
+	if result, handled := state.verticalTabGroupKey(event); handled {
+		return result
 	}
 	if event.Target.Scope() != hitTabList {
 		return ui.EventResult{}

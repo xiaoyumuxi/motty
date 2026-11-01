@@ -23,6 +23,7 @@ func TestEverySavedStateFieldIsSharedOrKeptOnThisDevice(t *testing.T) {
 		"restore_connect": true, "share_connections": true, "update_check": true, "close_action": true, "update_skipped": true, "ai_panel_width": true,
 		"workspace": true, "active_session": true, "shortcuts": true, "identity_files": true, "agent_hosts": true, "sessions": true, "deck": true, "sync": true,
 		"host_view": true, "background": true, "snippet_shortcuts": true,
+		"tab_orientation": true, "vertical_tabs_auto_hide": true,
 		"sftp_local_bookmarks": true,
 		"sftp_columns":         true, "sftp_download_directory": true, "default_editor": true,
 		"toolbars":    true,

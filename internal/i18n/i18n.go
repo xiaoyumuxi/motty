@@ -128,6 +128,14 @@ type Messages struct {
 	SettingsAppearanceSystem               string
 	SettingsAppearanceDark                 string
 	SettingsAppearanceLight                string
+	SettingsTabOrientation                 string
+	SettingsTabOrientationDescription      string
+	SettingsTabsHorizontal                 string
+	SettingsTabsVertical                   string
+	SettingsTabsAutoHide                   string
+	SettingsTabsAutoHideDescription        string
+	VerticalTabsPin                        string
+	VerticalTabsAutoHide                   string
 	SettingsTerminalOption                 string
 	SettingsTerminalOptionDescription      string
 	SettingsTerminalOptionText             string
@@ -410,6 +418,7 @@ type Messages struct {
 	NewTabConnectTo      string
 	MenuCloseOtherTabs   string
 	MenuCloseTabsToRight string
+	MenuCloseTabsBelow   string
 	MenuDuplicateTab     string
 	MenuRenameTab        string
 	MenuRenameTerminal   string
